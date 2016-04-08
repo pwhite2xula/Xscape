@@ -33,8 +33,10 @@
     var facing = "right";
     var hozMove = 160;
     var runMove = 240;
-    var vertMove = -120;
-    var jumpTimer = 0.04;
+    var vertMove = -220;
+    var jumpTimer = 2.6;
+    var flyMove = 30;
+    var mosMove = 60;
 
     function create() {
 
@@ -48,31 +50,53 @@
 
         //player = game.add.sprite(2 * 48, 6 * 48, 'character');
         // create Tile Set the change the first and second paremter for that
-        player = game.add.sprite(32, 52, 'character'); //need a tile set first
-        //mosquito = game.add.sprite(32, 100, 'mosquito_right');
+        mosquito = game.add.sprite(90, 400, 'mosquito_right');
         //fly = game.add.sprite(83, 100, 'fly_right');
+        
+        player = game.add.sprite(32, 52, 'character'); //need a tile set first
 
         // try different physics methods, default is ARCADE, second arg
         game.physics.enable(player);
-        //game.physics.enable(mosquito, chipmunk);
-        //game.physics.enable(fly, p2)
-
-        //? not working for some reason on left
+        game.physics.enable(mosquito);
+        //game.physics.enable(fly);
+        
         player.body.collideWorldBounds = true;
+        mosquito.body.collideWorldBounds = true;
+        //fly.body.collideWorldBounds = true;
 
         // Set the amount of gravity to apply to the physics body of the 'player' sprite
-        player.body.gravity.y = 96;
+        player.body.gravity.y = 275;
+        //mosquito.body.gravity.y = 32;
+        //fly.body.gravity.y = 50;
 
-        //PLATFORMS - X: 800-1000 Y: 0-2560 on background
+        //PLATFORMS - X: 800-1000 Y: 0-2560 on background photo
         // on first_level figure it out on Friday with Tiled
 
+        
+        player.events.onInputDown.add(moveMosquito, mosquito);
+        //game.add.tween(fly).from();
 
+    }
+    
+    function moveMosquito() {
+        if (this.x === 90) {
+            game.add.tween(mosquito).to( { x: '+90'}, 100, Phaser.Easing.Linear.None, true);
+        }
+        else if (this.x === 180) {
+            game.add.tween(mosquito).to( { x: '-90'}, 100, Phaser.Easing.Liner.None, true);
+        }
+    }
+    
+    function moveFly() {
+        
     }
 
     function update() {
 
         // Reset the x (horizontal) velocity
         player.body.velocity.x = 0;
+        mosquito.body.velocity.x = mosMove;
+        //fly.body.velocity.x = flyMove;
 
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
@@ -109,7 +133,7 @@
             }
         }
 
-        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && player.body.onFloor() && game.time.now > jumpTimer)
+        if (game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)  && player.body.onFloor() && game.time.now > jumpTimer)
         {
             // Set the 'player' sprite's y velocity to a negative number
             //  (vertMove is -90) and thus have it move up on the screen.
@@ -119,18 +143,7 @@
             //   Here, that is 650 ms.)
             jumpTimer = game.time.now + 650;
         }
-
-        // Check if 'facing' is "left"
-        if (facing === "left") {
-            // Set the 'player' to the second (1) frame
-            //  ('facing' is "left")
-            player.frame = 1;
-        } else {
-            // Set the 'player' to the first (0) frame
-            //  ('facing' is "right").
-            player.frame = 0;
-        }
-
+        
         if (Phaser.Keyboard.SPACEBAR.isDown && player.body.onFloor() && game.time.now > jumpTimer)
         {
             player.body.velocity.y = -250;
