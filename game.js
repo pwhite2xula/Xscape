@@ -14,19 +14,23 @@
     );
 
     function preload() {
-        game.load.spritesheet('character', 'assets/character.png', 23.25, 41);
-        game.load.spritesheet('mosquito_right', 'assets/mosquito_right.png', 80, 53);
-        game.load.spritesheet('mosquito_left', 'assets/mosquit_left.png', 80, 51);
-        game.load.spritesheet('fly_right', 'assets/fly_right.png', 64, 59);
-        game.load.spritesheet('fly_left', 'assets/fly_left.png', 64, 67);
-        //game.load.image('background', "assets/background.png");
+        game.load.tilemap('map', 'assets/json/map.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.spritesheet('character', 'assets/sprite/character.png', 23.25, 41);
+        game.load.spritesheet('mosquito_right', 'assets/creature/mosquito_right.png', 80, 53);
+        game.load.spritesheet('mosquito_left', 'assets/creature/mosquito_left.png', 80, 51);
+        game.load.spritesheet('fly_right', 'assets/creature/fly_right.png', 64, 59);
+        game.load.spritesheet('fly_left', 'assets/creature/fly_left.png', 64, 67);
+        game.load.spritesheet('coin', 'assets/item/coin.png');
+        game.load.image('background', "assets/background.png");
         //game.load.image('cloud', 'assets/cloud.png');
-        game.load.image('platform', 'assets/platform.png');
-        game.load.image('first_level', "assets/first_level.jpg");
+        //game.load.image('platform', 'assets/maps/platform.png');
+        //game.load.image('first_level', "assets/maps/first_level.jpg");
+        game.load.image('ground1', 'assets/tiles/ground_1.png');
+        game.load.image('ground2', 'assets/tiles/ground_2.png');
+        game.load.image('tiles', 'assets/tiles/tiles.png');
     }
 
     var background;
-
     var player;
     var mosquito;
     var fly;
@@ -37,12 +41,46 @@
     var jumpTimer = 2.6;
     var flyMove = 30;
     var mosMove = 60;
+    var map;
+    var coins;
+    var layer;
+    var text;
 
     function create() {
 
-        //background = game.add.backgroundImage(0, 0, 2560, 1080);
+        background = game.add.backgroundImage(0, 0, 2560, 1080);
+        text = game.add.text(0,0,"25", style);
+        text.anchor.set(0.5);
         //game.add.sprite(0, 0, 'background');
-        game.add.sprite(0, 0, 'first_level');
+        
+        /*
+        map = game.add.tilemap('map');
+        
+        map.addTilesetImage('ground1');
+        map.addTilesetImage('ground2');
+        map.addTilesetImage('tiles');
+        
+        map.setCollisionBetween(1, 12);
+        layer = map.createLayer('Object Layer 1');
+        
+        layer.resizeWorld();
+
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+
+        coins = game.add.group();
+        coins.enableBody = true;
+        
+        map.createFromObjects('Object Layer 1', 34, 'coin', 0, true, false, coins);
+        
+        coins.callAll('animations.add', 'animations', 'spin', [0, 1, 2, 3, 4, 5], 10, true);
+        coins.callAll('animations.play', 'animations', 'spin');
+        */
+        
+        //  This adjusts the collision body size.
+        player.body.setSize(32, 32, 0, 0);
+        
+        //
+        //game.add.sprite(0, 0, 'first_level');
 
         game.time.desiredFps = 30;
 
